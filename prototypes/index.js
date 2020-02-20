@@ -774,19 +774,22 @@ const bossPrompts = {
     //   { bossName: 'Ursula', sidekickLoyalty: 20 },
     //   { bossName: 'Scar', sidekickLoyalty: 16 }
     // ]
-    const result = 'nothing';
-    let condensedSidekicks = [];
-    let foundSidekicks = sidekicks.forEach((sidekick) => {
-      let sidekicksArr = [];
-      sidekicksArr.push(
-        {
-          bossName: sidekick.boss,
-          sidekickLoyalty: sidekick.loyaltyToBoss,
-        },
-      );
-      return sidekicksArr;
+    let bossKeys = Object.keys(bosses);
+
+    const result = bossKeys.map(boss => {
+      let filteredSidekicks = sidekicks.filter(sidekick => {
+        return sidekick.boss.toLowerCase() === boss;
+      });
+      return filteredSidekicks.reduce((totalLoyalty, sidekick) => {
+        totalLoyalty.bossName = sidekick.boss;
+        totalLoyalty.sidekickLoyalty += sidekick.loyaltyToBoss;
+        return totalLoyalty;
+      }, {
+        bossName: null,
+        sidekickLoyalty: 0,
+      });
     });
-    console.log(foundSidekicks);
+    console.log(result);
     return result;
 
     // Annotation:
