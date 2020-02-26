@@ -915,7 +915,6 @@ const astronomyPrompts = {
         return starA.visualMagnitude - starB.visualMagnitude;
       })
 
-
       sortedStars.forEach(star => {
         if (star.constellation.length > 0) {
           justConstellationNamesOfSortedStars.push(star.constellation);
@@ -954,11 +953,18 @@ const ultimaPrompts = {
     // Return the sum of the amount of damage for all the weapons that our characters can use
     // Answer => 113
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    totalDamage = characters.reduce((sumDamage, currentCharacter) => {
+      currentCharacter.weapons.forEach(weapon => {
+        sumDamage += weapons[weapon].damage;
+      });
+      return sumDamage;
+    }, 0);
+
+    const result = totalDamage;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // We need to use Object.Keys to access all weapon objects in weapons array;
   },
 
   charactersByTotal() {
