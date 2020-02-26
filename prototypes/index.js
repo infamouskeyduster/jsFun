@@ -724,7 +724,29 @@ const turingPrompts = {
     //   recursion: [ 'Pam', 'Leta' ]
     // }
 
-    const result = 'insert result here';
+    let allSubjects = [];
+    cohorts.forEach(cohort => {
+      cohort.curriculum.forEach(subject => {
+        if (!allSubjects.includes(subject)) {
+          allSubjects.push(subject);
+        }
+      });
+    });
+
+    const result =
+    allSubjects.reduce((teachersBySubject, subject) => {
+      if (!teachersBySubject[subject]) {
+        teachersBySubject[subject] = [];
+      }
+      instructors.forEach(instructor => {
+        if (instructor.teaches.includes(subject)) {
+          teachersBySubject[subject].push(instructor.name);
+        }
+      })
+
+      return teachersBySubject;
+    }, {});
+
     return result;
 
     // Annotation:
@@ -899,8 +921,6 @@ const astronomyPrompts = {
           justConstellationNamesOfSortedStars.push(star.constellation);
         };
       });
-
-    console.log(justConstellationNamesOfSortedStars);
 
     const result = justConstellationNamesOfSortedStars;
     return result;
