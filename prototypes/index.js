@@ -668,11 +668,11 @@ const turingPrompts = {
     // }
 
     const result =
-      cohorts.reduce((acc, cohort) => {
+      cohorts.reduce((studentTeacherRatio, cohort) => {
         let moduleTeachers = instructors.filter(instructor => cohort.module === instructor.module);
-        acc[`cohort${cohort.cohort}`] = cohort.studentCount / moduleTeachers.length;
-        return acc;
-      }, {});;
+        studentTeacherRatio[`cohort${cohort.cohort}`] = cohort.studentCount / moduleTeachers.length;
+        return studentTeacherRatio;
+      }, {});
     return result;
 
     // Annotation:
@@ -724,27 +724,15 @@ const turingPrompts = {
     //   recursion: [ 'Pam', 'Leta' ]
     // }
 
-    const result = instructors.reduce((acc, instructor) => {
-      instructor.teaches.forEach((subject) => {
-          acc[subject] = [];
-        if (instructor.teaches.includes(subject) && !acc[subject].includes(instructor.name)) {
-          acc[subject].push(instructor.name);
-        }
-      });
-      console.log(acc);
-      return acc;
-    }, {});
+    const result = 'insert result here';
     return result;
 
-    // cohorts.reduce((acc, cohort) => {
-    //   cohort.curriculum.forEach((subject) => {
-    //     acc[subject] = [];
-    //   });
-    //   return acc;
-    // }, {});
-
     // Annotation:
-    // Write your annotation here as a comment
+    // We need to set keys of our returned object to the subject being taught
+    //   these are arrays inside of an array
+    // Then, we need to check our teachers arrays and see if the array contains
+    // the key of the subject we are on, if so, we need to push the instructors name into
+    // the array (which is the corresponding value of the key of the subject)
   }
 };
 
@@ -789,7 +777,6 @@ const bossPrompts = {
         sidekickLoyalty: 0,
       });
     });
-    console.log(result);
     return result;
 
     // Annotation:
@@ -831,11 +818,29 @@ const astronomyPrompts = {
     //     color: 'red' }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let constellationNames = Object.keys(constellations);
+
+    let allStarsInConsteallations = [];
+
+    constellationNames.forEach(constellationName => {
+      allStarsInConsteallations = allStarsInConsteallations.concat(constellations[constellationName].stars);
+    });
+
+
+    const result = stars.reduce((matchedStars, currentStar) => {
+      allStarsInConsteallations.forEach(starsInConstellation => {
+        if (starsInConstellation === currentStar.name) {
+          matchedStars.push(currentStar);
+        }
+      });
+      return matchedStars;
+    }, []);
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // We want to gather all stars that are in our constellations into a single array;
+    // Then we want to check our stars array with a FIND and return any star that
+    // is a match for the stars in our constellations;
   },
 
   starsByColor() {
@@ -849,11 +854,23 @@ const astronomyPrompts = {
     //   red: [{obj}]
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let colorCodedStars = stars.reduce((starColorObj, currentStar) => {
+      if (!starColorObj[currentStar.color]) {
+        starColorObj[currentStar.color] = [];
+      };
+      starColorObj[currentStar.color].push(currentStar);
+      return starColorObj;
+    }, {});
+
+    const result = colorCodedStars;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // We need to iterate over every star obj in stars array,
+    // and set the key inside of a new object to the star's color;
+    // THEN we need to check our stars array, and push in any star object
+    // that has a matching color into the value array of the matching color in
+    // our new object
   },
 
   constellationsStarsExistIn() {
@@ -870,12 +887,27 @@ const astronomyPrompts = {
     //    "Orion",
     //    "The Little Dipper" ]
 
+    let justConstellationNamesOfSortedStars = [];
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let sortedStars = stars.sort((starA, starB) => {
+        return starA.visualMagnitude - starB.visualMagnitude;
+      })
+
+
+      sortedStars.forEach(star => {
+        if (star.constellation.length > 0) {
+          justConstellationNamesOfSortedStars.push(star.constellation);
+        };
+      });
+
+    console.log(justConstellationNamesOfSortedStars);
+
+    const result = justConstellationNamesOfSortedStars;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // Take our stars array and sort it from least to greatest based on visualMagnitude
+    // of its star, then we need to return an array of JUST the constellation name.
   }
 };
 
